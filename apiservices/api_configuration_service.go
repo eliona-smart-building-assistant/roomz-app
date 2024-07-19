@@ -16,12 +16,12 @@
 package apiservices
 
 import (
-	"app-name/apiserver"
-	"app-name/conf"
-	confmodel "app-name/model/conf"
 	"context"
 	"errors"
 	"net/http"
+	"roomz/apiserver"
+	"roomz/conf"
+	confmodel "roomz/model/conf"
 )
 
 // ConfigurationAPIService is a service that implements the logic for the ConfigurationAPIServicer

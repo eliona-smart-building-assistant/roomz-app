@@ -1,16 +1,16 @@
 {
-  "name": "app-name",
+  "name": "roomz",
   "elionaMinVersion": "v11.0.0",
   "displayName": {
-    "en": "App Name",
-    "de": "App Name"
+    "en": "ROOMZ",
+    "de": "ROOMZ"
   },
   "description": {
-    "en": "The App Name app is used to access App Name.",
-    "de": "Die App Name App ermöglicht den Zugriff auf App Name."
+    "en": "The ROOMZ app is used to access ROOMZ.",
+    "de": "Die ROOMZ App ermöglicht den Zugriff auf ROOMZ."
   },
   "dashboardTemplateNames": [
-    "App Name"
+    "ROOMZ"
   ],
   "apiUrl": "v1",
   "apiSpecificationPath": "/version/openapi.json",

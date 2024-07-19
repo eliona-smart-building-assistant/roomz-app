@@ -16,8 +16,8 @@
 package broker
 
 import (
-	"app-name/apiserver"
-	"app-name/model"
+	"roomz/apiserver"
+	"roomz/model"
 )
 
 func GetDevices(config apiserver.Configuration) (model.Root, error) {

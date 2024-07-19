@@ -16,10 +16,10 @@
 package assetmodel
 
 import (
-	"app-name/conf"
-	confmodel "app-name/model/conf"
 	"context"
 	"fmt"
+	"roomz/conf"
+	confmodel "roomz/model/conf"
 
 	"github.com/eliona-smart-building-assistant/go-eliona/asset"
 	"github.com/eliona-smart-building-assistant/go-eliona/utils"
@@ -95,7 +95,7 @@ func (r *Root) GetName() string {
 }
 
 func (r *Root) GetDescription() string {
-	return "Root asset for App Name devices"
+	return "Root asset for ROOMZ devices"
 }
 
 func (r *Root) GetAssetType() string {

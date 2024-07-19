@@ -16,13 +16,13 @@
 package main
 
 import (
-	"app-name/apiserver"
-	"app-name/apiservices"
-	"app-name/conf"
-	"app-name/eliona"
-	confmodel "app-name/model/conf"
 	"context"
 	"net/http"
+	"roomz/apiserver"
+	"roomz/apiservices"
+	"roomz/conf"
+	"roomz/eliona"
+	confmodel "roomz/model/conf"
 	"sync"
 	"time"
 

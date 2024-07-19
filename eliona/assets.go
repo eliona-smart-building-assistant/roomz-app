@@ -16,8 +16,8 @@
 package eliona
 
 import (
-	confmodel "app-name/model/conf"
 	"fmt"
+	confmodel "roomz/model/conf"
 
 	api "github.com/eliona-smart-building-assistant/go-eliona-api-client/v2"
 	"github.com/eliona-smart-building-assistant/go-eliona/asset"

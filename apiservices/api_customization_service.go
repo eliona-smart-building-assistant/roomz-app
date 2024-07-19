@@ -16,9 +16,9 @@
 package apiservices
 
 import (
-	"app-name/apiserver"
 	"context"
 	"net/http"
+	"roomz/apiserver"
 )
 
 // CustomizationAPIService is a service that implements the logic for the CustomizationAPIServicer

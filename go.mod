@@ -1,4 +1,4 @@
-module app-name
+module roomz
 
 go 1.21
 
