@@ -17,11 +17,13 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"roomz/apiserver"
 	"roomz/apiservices"
 	"roomz/conf"
 	confmodel "roomz/model/conf"
+	"roomz/roomz"
 	"sync"
 
 	"github.com/eliona-smart-building-assistant/go-eliona/app"
@@ -87,7 +89,20 @@ func collectData() {
 }
 
 func startWebhookListener(config confmodel.Configuration) {
-	// Do the magic here
+	server := roomz.NewWebhookServer()
+
+	handlePresenceChange := func(workspaceId string, presenceStatus roomz.PresenceStatus) error {
+		fmt.Printf("Workspace ID: %s, Presence Status: %s\n", workspaceId, presenceStatus)
+		// todo
+		return nil
+	}
+
+	server.RegisterHandler("workspace.presence.changed", roomz.HandleWorkspacePresenceChanged(handlePresenceChange))
+	fmt.Println("start")
+	http.Handle("/webhook", server)
+	if err := http.ListenAndServe(":8081", nil); err != nil {
+		log.Fatal("roomz webhook", "Error starting server on port 8081: %v\n", err)
+	}
 	return
 }
 
