@@ -24,109 +24,45 @@ import (
 
 // Configuration is an object representing the database table.
 type Configuration struct {
-	ID                int64             `boil:"id" json:"id" toml:"id" yaml:"id"`
-	APIAccessChangeMe string            `boil:"api_access_change_me" json:"api_access_change_me" toml:"api_access_change_me" yaml:"api_access_change_me"`
-	RefreshInterval   int32             `boil:"refresh_interval" json:"refresh_interval" toml:"refresh_interval" yaml:"refresh_interval"`
-	RequestTimeout    int32             `boil:"request_timeout" json:"request_timeout" toml:"request_timeout" yaml:"request_timeout"`
-	AssetFilter       types.JSON        `boil:"asset_filter" json:"asset_filter" toml:"asset_filter" yaml:"asset_filter"`
-	Active            bool              `boil:"active" json:"active" toml:"active" yaml:"active"`
-	Enable            bool              `boil:"enable" json:"enable" toml:"enable" yaml:"enable"`
-	ProjectIds        types.StringArray `boil:"project_ids" json:"project_ids" toml:"project_ids" yaml:"project_ids"`
-	UserID            string            `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
+	ID         int64             `boil:"id" json:"id" toml:"id" yaml:"id"`
+	Active     bool              `boil:"active" json:"active" toml:"active" yaml:"active"`
+	Enable     bool              `boil:"enable" json:"enable" toml:"enable" yaml:"enable"`
+	ProjectIds types.StringArray `boil:"project_ids" json:"project_ids" toml:"project_ids" yaml:"project_ids"`
+	UserID     string            `boil:"user_id" json:"user_id" toml:"user_id" yaml:"user_id"`
 
 	R *configurationR `boil:"-" json:"-" toml:"-" yaml:"-"`
 	L configurationL  `boil:"-" json:"-" toml:"-" yaml:"-"`
 }
 
 var ConfigurationColumns = struct {
-	ID                string
-	APIAccessChangeMe string
-	RefreshInterval   string
-	RequestTimeout    string
-	AssetFilter       string
-	Active            string
-	Enable            string
-	ProjectIds        string
-	UserID            string
+	ID         string
+	Active     string
+	Enable     string
+	ProjectIds string
+	UserID     string
 }{
-	ID:                "id",
-	APIAccessChangeMe: "api_access_change_me",
-	RefreshInterval:   "refresh_interval",
-	RequestTimeout:    "request_timeout",
-	AssetFilter:       "asset_filter",
-	Active:            "active",
-	Enable:            "enable",
-	ProjectIds:        "project_ids",
-	UserID:            "user_id",
+	ID:         "id",
+	Active:     "active",
+	Enable:     "enable",
+	ProjectIds: "project_ids",
+	UserID:     "user_id",
 }
 
 var ConfigurationTableColumns = struct {
-	ID                string
-	APIAccessChangeMe string
-	RefreshInterval   string
-	RequestTimeout    string
-	AssetFilter       string
-	Active            string
-	Enable            string
-	ProjectIds        string
-	UserID            string
+	ID         string
+	Active     string
+	Enable     string
+	ProjectIds string
+	UserID     string
 }{
-	ID:                "configuration.id",
-	APIAccessChangeMe: "configuration.api_access_change_me",
-	RefreshInterval:   "configuration.refresh_interval",
-	RequestTimeout:    "configuration.request_timeout",
-	AssetFilter:       "configuration.asset_filter",
-	Active:            "configuration.active",
-	Enable:            "configuration.enable",
-	ProjectIds:        "configuration.project_ids",
-	UserID:            "configuration.user_id",
+	ID:         "configuration.id",
+	Active:     "configuration.active",
+	Enable:     "configuration.enable",
+	ProjectIds: "configuration.project_ids",
+	UserID:     "configuration.user_id",
 }
 
 // Generated where
-
-type whereHelperint32 struct{ field string }
-
-func (w whereHelperint32) EQ(x int32) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.EQ, x) }
-func (w whereHelperint32) NEQ(x int32) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.NEQ, x) }
-func (w whereHelperint32) LT(x int32) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.LT, x) }
-func (w whereHelperint32) LTE(x int32) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.LTE, x) }
-func (w whereHelperint32) GT(x int32) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.GT, x) }
-func (w whereHelperint32) GTE(x int32) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.GTE, x) }
-func (w whereHelperint32) IN(slice []int32) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
-}
-func (w whereHelperint32) NIN(slice []int32) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereNotIn(fmt.Sprintf("%s NOT IN ?", w.field), values...)
-}
-
-type whereHelpertypes_JSON struct{ field string }
-
-func (w whereHelpertypes_JSON) EQ(x types.JSON) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.EQ, x)
-}
-func (w whereHelpertypes_JSON) NEQ(x types.JSON) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.NEQ, x)
-}
-func (w whereHelpertypes_JSON) LT(x types.JSON) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LT, x)
-}
-func (w whereHelpertypes_JSON) LTE(x types.JSON) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.LTE, x)
-}
-func (w whereHelpertypes_JSON) GT(x types.JSON) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GT, x)
-}
-func (w whereHelpertypes_JSON) GTE(x types.JSON) qm.QueryMod {
-	return qmhelper.Where(w.field, qmhelper.GTE, x)
-}
 
 type whereHelperbool struct{ field string }
 
@@ -159,25 +95,17 @@ func (w whereHelpertypes_StringArray) GTE(x types.StringArray) qm.QueryMod {
 }
 
 var ConfigurationWhere = struct {
-	ID                whereHelperint64
-	APIAccessChangeMe whereHelperstring
-	RefreshInterval   whereHelperint32
-	RequestTimeout    whereHelperint32
-	AssetFilter       whereHelpertypes_JSON
-	Active            whereHelperbool
-	Enable            whereHelperbool
-	ProjectIds        whereHelpertypes_StringArray
-	UserID            whereHelperstring
+	ID         whereHelperint64
+	Active     whereHelperbool
+	Enable     whereHelperbool
+	ProjectIds whereHelpertypes_StringArray
+	UserID     whereHelperstring
 }{
-	ID:                whereHelperint64{field: "\"roomz\".\"configuration\".\"id\""},
-	APIAccessChangeMe: whereHelperstring{field: "\"roomz\".\"configuration\".\"api_access_change_me\""},
-	RefreshInterval:   whereHelperint32{field: "\"roomz\".\"configuration\".\"refresh_interval\""},
-	RequestTimeout:    whereHelperint32{field: "\"roomz\".\"configuration\".\"request_timeout\""},
-	AssetFilter:       whereHelpertypes_JSON{field: "\"roomz\".\"configuration\".\"asset_filter\""},
-	Active:            whereHelperbool{field: "\"roomz\".\"configuration\".\"active\""},
-	Enable:            whereHelperbool{field: "\"roomz\".\"configuration\".\"enable\""},
-	ProjectIds:        whereHelpertypes_StringArray{field: "\"roomz\".\"configuration\".\"project_ids\""},
-	UserID:            whereHelperstring{field: "\"roomz\".\"configuration\".\"user_id\""},
+	ID:         whereHelperint64{field: "\"roomz\".\"configuration\".\"id\""},
+	Active:     whereHelperbool{field: "\"roomz\".\"configuration\".\"active\""},
+	Enable:     whereHelperbool{field: "\"roomz\".\"configuration\".\"enable\""},
+	ProjectIds: whereHelpertypes_StringArray{field: "\"roomz\".\"configuration\".\"project_ids\""},
+	UserID:     whereHelperstring{field: "\"roomz\".\"configuration\".\"user_id\""},
 }
 
 // ConfigurationRels is where relationship names are stored.
@@ -208,9 +136,9 @@ func (r *configurationR) GetAssets() AssetSlice {
 type configurationL struct{}
 
 var (
-	configurationAllColumns            = []string{"id", "api_access_change_me", "refresh_interval", "request_timeout", "asset_filter", "active", "enable", "project_ids", "user_id"}
-	configurationColumnsWithoutDefault = []string{"api_access_change_me", "asset_filter", "project_ids", "user_id"}
-	configurationColumnsWithDefault    = []string{"id", "refresh_interval", "request_timeout", "active", "enable"}
+	configurationAllColumns            = []string{"id", "active", "enable", "project_ids", "user_id"}
+	configurationColumnsWithoutDefault = []string{"project_ids", "user_id"}
+	configurationColumnsWithDefault    = []string{"id", "active", "enable"}
 	configurationPrimaryKeyColumns     = []string{"id"}
 	configurationGeneratedColumns      = []string{}
 )

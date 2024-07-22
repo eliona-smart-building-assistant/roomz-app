@@ -90,15 +90,11 @@ func (s *ConfigurationAPIService) DeleteConfigurationById(ctx context.Context, c
 
 func toAPIConfig(appConfig confmodel.Configuration) apiserver.Configuration {
 	return apiserver.Configuration{
-		Id:                &appConfig.Id,
-		ApiAccessChangeMe: appConfig.ApiAccessChangeMe,
-		Enable:            &appConfig.Enable,
-		RefreshInterval:   appConfig.RefreshInterval,
-		RequestTimeout:    &appConfig.RequestTimeout,
-		AssetFilter:       toAPIAssetFilter(appConfig.AssetFilter),
-		Active:            &appConfig.Active,
-		ProjectIDs:        &appConfig.ProjectIDs,
-		UserId:            &appConfig.UserId,
+		Id:         &appConfig.Id,
+		Enable:     &appConfig.Enable,
+		Active:     &appConfig.Active,
+		ProjectIDs: &appConfig.ProjectIDs,
+		UserId:     &appConfig.UserId,
 	}
 }
 
@@ -117,17 +113,8 @@ func toAPIAssetFilter(appAF [][]confmodel.FilterRule) (result [][]apiserver.Filt
 }
 
 func toAppConfig(apiConfig apiserver.Configuration) (appConfig confmodel.Configuration) {
-	appConfig.ApiAccessChangeMe = apiConfig.ApiAccessChangeMe
-
 	if apiConfig.Id != nil {
 		appConfig.Id = *apiConfig.Id
-	}
-	appConfig.RefreshInterval = apiConfig.RefreshInterval
-	if apiConfig.RequestTimeout != nil {
-		appConfig.RequestTimeout = *apiConfig.RequestTimeout
-	}
-	if apiConfig.AssetFilter != nil {
-		appConfig.AssetFilter = toAppAssetFilter(apiConfig.AssetFilter)
 	}
 	if apiConfig.Active != nil {
 		appConfig.Active = *apiConfig.Active

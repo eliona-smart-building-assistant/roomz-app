@@ -23,7 +23,6 @@ import (
 	"roomz/conf"
 	confmodel "roomz/model/conf"
 	"sync"
-	"time"
 
 	"github.com/eliona-smart-building-assistant/go-eliona/app"
 	"github.com/eliona-smart-building-assistant/go-eliona/asset"
@@ -77,25 +76,13 @@ func collectData() {
 			conf.SetConfigActiveState(context.Background(), config, true)
 			log.Info("conf", "Collecting initialized with Configuration %d:\n"+
 				"Enable: %t\n"+
-				"Refresh Interval: %d\n"+
-				"Request Timeout: %d\n"+
 				"Project IDs: %v\n",
 				config.Id,
 				config.Enable,
-				config.RefreshInterval,
-				config.RequestTimeout,
 				config.ProjectIDs)
 		}
 
-		common.RunOnceWithParam(func(config confmodel.Configuration) {
-			log.Info("main", "Collecting %d started.", config.Id)
-			if err := collectResources(&config); err != nil {
-				return // Error is handled in the method itself.
-			}
-			log.Info("main", "Collecting %d finished.", config.Id)
-
-			time.Sleep(time.Second * time.Duration(config.RefreshInterval))
-		}, config, config.Id)
+		// todo: start webhook endpoint
 	}
 }
 

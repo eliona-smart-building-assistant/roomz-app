@@ -18,7 +18,6 @@ package conf
 import (
 	"context"
 	"database/sql"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"roomz/appdb"
@@ -94,16 +93,7 @@ func DeleteConfig(ctx context.Context, configID int64) error {
 }
 
 func toDbConfig(ctx context.Context, appConfig confmodel.Configuration) (dbConfig appdb.Configuration, err error) {
-	dbConfig.APIAccessChangeMe = appConfig.ApiAccessChangeMe
-
 	dbConfig.ID = appConfig.Id
-	dbConfig.RefreshInterval = appConfig.RefreshInterval
-	dbConfig.RequestTimeout = appConfig.RequestTimeout
-	af, err := json.Marshal(appConfig.AssetFilter)
-	if err != nil {
-		return appdb.Configuration{}, fmt.Errorf("marshalling assetFilter: %v", err)
-	}
-	dbConfig.AssetFilter = af
 	dbConfig.Active = appConfig.Active
 	dbConfig.Enable = appConfig.Enable
 	dbConfig.ProjectIds = appConfig.ProjectIDs
@@ -117,17 +107,8 @@ func toDbConfig(ctx context.Context, appConfig confmodel.Configuration) (dbConfi
 }
 
 func toAppConfig(dbConfig *appdb.Configuration) (appConfig confmodel.Configuration, err error) {
-	appConfig.ApiAccessChangeMe = dbConfig.APIAccessChangeMe
-
 	appConfig.Id = dbConfig.ID
 	appConfig.Enable = dbConfig.Enable
-	appConfig.RefreshInterval = dbConfig.RefreshInterval
-	appConfig.RequestTimeout = dbConfig.RequestTimeout
-	var af [][]confmodel.FilterRule
-	if err := json.Unmarshal(dbConfig.AssetFilter, &af); err != nil {
-		return confmodel.Configuration{}, fmt.Errorf("unmarshalling assetFilter: %v", err)
-	}
-	appConfig.AssetFilter = af
 	appConfig.Active = dbConfig.Active
 	appConfig.ProjectIDs = dbConfig.ProjectIds
 	appConfig.UserId = dbConfig.UserID
