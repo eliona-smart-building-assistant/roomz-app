@@ -21,8 +21,7 @@ type ConfigurationAPIRouter interface {
 	DeleteConfigurationById(http.ResponseWriter, *http.Request)
 	GetConfigurationById(http.ResponseWriter, *http.Request)
 	GetConfigurations(http.ResponseWriter, *http.Request)
-	PostConfiguration(http.ResponseWriter, *http.Request)
-	PutConfigurationById(http.ResponseWriter, *http.Request)
+	PutConfiguration(http.ResponseWriter, *http.Request)
 }
 
 // CustomizationAPIRouter defines the required methods for binding the api requests to a responses for the CustomizationAPI
@@ -48,8 +47,7 @@ type ConfigurationAPIServicer interface {
 	DeleteConfigurationById(context.Context, int64) (ImplResponse, error)
 	GetConfigurationById(context.Context, int64) (ImplResponse, error)
 	GetConfigurations(context.Context) (ImplResponse, error)
-	PostConfiguration(context.Context, Configuration) (ImplResponse, error)
-	PutConfigurationById(context.Context, int64, Configuration) (ImplResponse, error)
+	PutConfiguration(context.Context, Configuration) (ImplResponse, error)
 }
 
 // CustomizationAPIServicer defines the api actions for the CustomizationAPI service

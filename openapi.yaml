@@ -65,20 +65,20 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Configuration"
-    post:
+    put:
       tags:
         - Configuration
-      summary: Creates a configuration
-      description: Creates a configuration.
-      operationId: postConfiguration
+      summary: Updates a configuration
+      description: Updates a configuration
+      operationId: putConfiguration
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/Configuration"
       responses:
-        "201":
-          description: Successfully created a configuration
+        "200":
+          description: Successfully updated a configuration
           content:
             application/json:
               schema:
@@ -102,26 +102,6 @@ paths:
                 $ref: "#/components/schemas/Configuration"
         "400":
           description: Bad request
-    put:
-      tags:
-        - Configuration
-      summary: Updates a configuration
-      description: Updates a configuration
-      parameters:
-        - $ref: "#/components/parameters/config-id"
-      operationId: putConfigurationById
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Configuration"
-      responses:
-        "200":
-          description: Successfully updated a configuration
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Configuration"
     delete:
       tags:
         - Configuration

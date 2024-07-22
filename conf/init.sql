@@ -18,7 +18,7 @@ create schema if not exists roomz;
 -- Should be editable by eliona frontend.
 create table if not exists roomz.configuration
 (
-	id                   bigserial primary key,
+	id                   bigserial primary key CHECK (id = 1), -- Only one configuration is possible
 	active               boolean not null default false,
 	enable               boolean not null default false,
 	project_ids          text[] not null,

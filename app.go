@@ -82,13 +82,13 @@ func collectData() {
 				config.ProjectIDs)
 		}
 
-		// todo: start webhook endpoint
+		common.RunOnceWithParam(startWebhookListener, config, 1) // We allow only one listener to work (we have only one port available).
 	}
 }
 
-func collectResources(config *confmodel.Configuration) error {
+func startWebhookListener(config confmodel.Configuration) {
 	// Do the magic here
-	return nil
+	return
 }
 
 // listenApi starts the API server and listen for requests

@@ -47,15 +47,6 @@ func (s *ConfigurationAPIService) GetConfigurations(ctx context.Context) (apiser
 	return apiserver.Response(http.StatusOK, configs), nil
 }
 
-func (s *ConfigurationAPIService) PostConfiguration(ctx context.Context, config apiserver.Configuration) (apiserver.ImplResponse, error) {
-	appConfig := toAppConfig(config)
-	insertedConfig, err := conf.InsertConfig(ctx, appConfig)
-	if err != nil {
-		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
-	}
-	return apiserver.Response(http.StatusCreated, toAPIConfig(insertedConfig)), nil
-}
-
 func (s *ConfigurationAPIService) GetConfigurationById(ctx context.Context, configId int64) (apiserver.ImplResponse, error) {
 	config, err := conf.GetConfig(ctx, configId)
 	if errors.Is(err, conf.ErrNotFound) {
@@ -67,9 +58,9 @@ func (s *ConfigurationAPIService) GetConfigurationById(ctx context.Context, conf
 	return apiserver.Response(http.StatusOK, toAPIConfig(config)), nil
 }
 
-func (s *ConfigurationAPIService) PutConfigurationById(ctx context.Context, configId int64, config apiserver.Configuration) (apiserver.ImplResponse, error) {
-	config.Id = &configId
+func (s *ConfigurationAPIService) PutConfiguration(ctx context.Context, config apiserver.Configuration) (apiserver.ImplResponse, error) {
 	appConfig := toAppConfig(config)
+	appConfig.Id = 1
 	upsertedConfig, err := conf.UpsertConfig(ctx, appConfig)
 	if err != nil {
 		return apiserver.ImplResponse{Code: http.StatusInternalServerError}, err
