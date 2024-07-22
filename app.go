@@ -90,19 +90,15 @@ func collectData() {
 }
 
 func startWebhookListener(config confmodel.Configuration) {
-	server := roomz.NewWebhookServer()
-
 	handlePresenceChange := func(workspaceId string, presenceStatus roomz.PresenceStatus) error {
 		var presence int8
-		presence = 0
-		if presenceStatus == "busy" {
+		if presenceStatus == roomz.Busy {
 			presence = 1
 		}
 		sensor := assetmodel.Sensor{
 			ID:       workspaceId,
 			Presence: presence,
-
-			Config: &config,
+			Config:   &config,
 		}
 		root := assetmodel.Root{Config: &config, Sensors: []assetmodel.Sensor{sensor}}
 		if err := eliona.CreateAssets(config, &root); err != nil {
@@ -118,12 +114,7 @@ func startWebhookListener(config confmodel.Configuration) {
 		return nil
 	}
 
-	server.RegisterHandler("workspace.presence.changed", roomz.HandleWorkspacePresenceChanged(handlePresenceChange))
-	http.Handle("/webhook", server)
-	if err := http.ListenAndServe(":8081", nil); err != nil {
-		log.Fatal("roomz webhook", "Error starting server on port 8081: %v\n", err)
-	}
-	return
+	roomz.StartWebhookListener(handlePresenceChange)
 }
 
 // listenApi starts the API server and listen for requests

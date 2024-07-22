@@ -17,12 +17,12 @@ package roomz
 
 import (
 	"encoding/json"
-	"errors"
 	"io"
+	"log"
 	"net/http"
 )
 
-type WebhookEvent struct {
+type webhookEvent struct {
 	ID         string                 `json:"id"`
 	Type       string                 `json:"type"`
 	Timestamp  string                 `json:"timestamp"`
@@ -37,28 +37,28 @@ const (
 	Busy PresenceStatus = "busy"
 )
 
-type WorkspacePresenceChangedEvent struct {
+type workspacePresenceChangedEvent struct {
 	WorkspaceId    string         `json:"workspaceId"`
 	PresenceStatus PresenceStatus `json:"presenceStatus"`
 }
 
-type WebhookHandlerFunc func(WebhookEvent) error
+type webhookHandlerFunc func(workspaceId string, presenceStatus PresenceStatus) error
 
-type WebhookServer struct {
-	handlers map[string]WebhookHandlerFunc
+type webhookServer struct {
+	handlers map[string]webhookHandlerFunc
 }
 
-func NewWebhookServer() *WebhookServer {
-	return &WebhookServer{
-		handlers: make(map[string]WebhookHandlerFunc),
+func newWebhookServer() *webhookServer {
+	return &webhookServer{
+		handlers: make(map[string]webhookHandlerFunc),
 	}
 }
 
-func (s *WebhookServer) RegisterHandler(eventType string, handler WebhookHandlerFunc) {
+func (s *webhookServer) registerHandler(eventType string, handler webhookHandlerFunc) {
 	s.handlers[eventType] = handler
 }
 
-func (s *WebhookServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (s *webhookServer) serveHTTP(w http.ResponseWriter, r *http.Request) {
 	signature := r.Header.Get("X-Roomz-Signature")
 	if signature == "" {
 		http.Error(w, "Missing X-Roomz-Signature header", http.StatusBadRequest)
@@ -74,7 +74,7 @@ func (s *WebhookServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	var event WebhookEvent
+	var event webhookEvent
 	if err := json.Unmarshal(body, &event); err != nil {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
 		return
@@ -86,7 +86,7 @@ func (s *WebhookServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := handler(event); err != nil {
+	if err := handler(event.Data["workspaceId"].(string), PresenceStatus(event.Data["presenceStatus"].(string))); err != nil {
 		http.Error(w, "Failed to handle event", http.StatusInternalServerError)
 		return
 	}
@@ -94,20 +94,17 @@ func (s *WebhookServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func HandleWorkspacePresenceChanged(callback func(workspaceId string, presenceStatus PresenceStatus) error) WebhookHandlerFunc {
-	return func(event WebhookEvent) error {
-		data := event.Data
+func handleWorkspacePresenceChanged(callback func(workspaceId string, presenceStatus PresenceStatus) error) webhookHandlerFunc {
+	return func(workspaceId string, status PresenceStatus) error {
+		return callback(workspaceId, status)
+	}
+}
 
-		workspaceId, ok := data["workspaceId"].(string)
-		if !ok {
-			return errors.New("invalid workspaceId format")
-		}
-
-		presenceStatus, ok := data["presenceStatus"].(string)
-		if !ok {
-			return errors.New("invalid presenceStatus format")
-		}
-
-		return callback(workspaceId, PresenceStatus(presenceStatus))
+func StartWebhookListener(callback func(workspaceId string, presenceStatus PresenceStatus) error) {
+	server := newWebhookServer()
+	server.registerHandler("workspace.presence.changed", handleWorkspacePresenceChanged(callback))
+	http.HandleFunc("/webhook", server.serveHTTP)
+	if err := http.ListenAndServe(":8081", nil); err != nil {
+		log.Fatal("roomz webhook", "Error starting server on port 8081: %v\n", err)
 	}
 }
