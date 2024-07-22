@@ -17,11 +17,12 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"roomz/apiserver"
 	"roomz/apiservices"
 	"roomz/conf"
+	"roomz/eliona"
+	assetmodel "roomz/model/asset"
 	confmodel "roomz/model/conf"
 	"roomz/roomz"
 	"sync"
@@ -92,13 +93,32 @@ func startWebhookListener(config confmodel.Configuration) {
 	server := roomz.NewWebhookServer()
 
 	handlePresenceChange := func(workspaceId string, presenceStatus roomz.PresenceStatus) error {
-		fmt.Printf("Workspace ID: %s, Presence Status: %s\n", workspaceId, presenceStatus)
-		// todo
+		var presence int8
+		presence = 0
+		if presenceStatus == "busy" {
+			presence = 1
+		}
+		sensor := assetmodel.Sensor{
+			ID:       workspaceId,
+			Presence: presence,
+
+			Config: &config,
+		}
+		root := assetmodel.Root{Config: &config, Sensors: []assetmodel.Sensor{sensor}}
+		if err := eliona.CreateAssets(config, &root); err != nil {
+			log.Error("eliona", "creating assets for root %+v: %v", root, err)
+			return err
+		}
+
+		if err := eliona.UpsertAssetData(config, sensor); err != nil {
+			log.Error("eliona", "upserting data for sensor %+v: %v", sensor, err)
+			return err
+		}
+
 		return nil
 	}
 
 	server.RegisterHandler("workspace.presence.changed", roomz.HandleWorkspacePresenceChanged(handlePresenceChange))
-	fmt.Println("start")
 	http.Handle("/webhook", server)
 	if err := http.ListenAndServe(":8081", nil); err != nil {
 		log.Fatal("roomz webhook", "Error starting server on port 8081: %v\n", err)

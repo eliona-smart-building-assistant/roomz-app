@@ -22,76 +22,58 @@ import (
 	confmodel "roomz/model/conf"
 
 	"github.com/eliona-smart-building-assistant/go-eliona/asset"
-	"github.com/eliona-smart-building-assistant/go-eliona/utils"
-	"github.com/eliona-smart-building-assistant/go-utils/common"
 )
 
-// TODO: define the asset structure here
-
-type ExampleDevice struct {
-	ID   string `eliona:"id" subtype:"info"`
-	Name string `eliona:"name,filterable" subtype:"info"`
+type Sensor struct {
+	ID       string `eliona:"id" subtype:"info"`
+	Presence int8   `eliona:"presence" subtype:"input"`
 
 	Config *confmodel.Configuration
 }
 
-func (d *ExampleDevice) AdheresToFilter(filter [][]confmodel.FilterRule) (bool, error) {
-	f := apiFilterToCommonFilter(filter)
-	fp, err := utils.StructToMap(d)
-	if err != nil {
-		return false, fmt.Errorf("converting struct to map: %v", err)
-	}
-	adheres, err := common.Filter(f, fp)
-	if err != nil {
-		return false, err
-	}
-	return adheres, nil
+func (d *Sensor) GetName() string {
+	return d.ID
 }
 
-func (d *ExampleDevice) GetName() string {
-	return d.Name
+func (d *Sensor) GetDescription() string {
+	return "ROOMZ presence sensor"
 }
 
-func (d *ExampleDevice) GetDescription() string {
-	return ""
+func (d *Sensor) GetAssetType() string {
+	return "roomz_presence_sensor"
 }
 
-func (d *ExampleDevice) GetAssetType() string {
-	return "app_name_device"
-}
-
-func (d *ExampleDevice) GetGAI() string {
+func (d *Sensor) GetGAI() string {
 	return d.GetAssetType() + "_" + d.ID
 }
 
-func (d *ExampleDevice) GetAssetID(projectID string) (*int32, error) {
+func (d *Sensor) GetAssetID(projectID string) (*int32, error) {
 	return conf.GetAssetId(context.Background(), *d.Config, projectID, d.GetGAI())
 }
 
-func (d *ExampleDevice) SetAssetID(assetID int32, projectID string) error {
+func (d *Sensor) SetAssetID(assetID int32, projectID string) error {
 	if err := conf.InsertAsset(context.Background(), *d.Config, projectID, d.GetGAI(), assetID, d.ID); err != nil {
 		return fmt.Errorf("inserting asset to config db: %v", err)
 	}
 	return nil
 }
 
-func (d *ExampleDevice) GetLocationalChildren() []asset.LocationalNode {
+func (d *Sensor) GetLocationalChildren() []asset.LocationalNode {
 	return []asset.LocationalNode{}
 }
 
-func (d *ExampleDevice) GetFunctionalChildren() []asset.FunctionalNode {
+func (d *Sensor) GetFunctionalChildren() []asset.FunctionalNode {
 	return []asset.FunctionalNode{}
 }
 
 type Root struct {
-	locationsMap map[string]ExampleDevice
-	devicesSlice []ExampleDevice
+	Sensors []Sensor
 
 	Config *confmodel.Configuration
 }
 
 func (r *Root) GetName() string {
-	return "app_name"
+	return "ROOMZ"
 }
 
 func (r *Root) GetDescription() string {
@@ -99,7 +81,7 @@ func (r *Root) GetDescription() string {
 }
 
 func (r *Root) GetAssetType() string {
-	return "app_name_root"
+	return "roomz_root"
 }
 
 func (r *Root) GetGAI() string {
@@ -118,34 +100,17 @@ func (r *Root) SetAssetID(assetID int32, projectID string) error {
 }
 
 func (r *Root) GetLocationalChildren() []asset.LocationalNode {
-	locationalChildren := make([]asset.LocationalNode, 0, len(r.locationsMap))
-	for _, room := range r.locationsMap {
-		roomCopy := room // Create a copy of room
-		locationalChildren = append(locationalChildren, &roomCopy)
+	locationalChildren := make([]asset.LocationalNode, 0, len(r.Sensors))
+	for i := range r.Sensors {
+		locationalChildren = append(locationalChildren, &r.Sensors[i])
 	}
 	return locationalChildren
 }
 
 func (r *Root) GetFunctionalChildren() []asset.FunctionalNode {
-	functionalChildren := make([]asset.FunctionalNode, 0, len(r.devicesSlice))
-	for i := range r.devicesSlice {
-		functionalChildren[i] = &r.devicesSlice[i]
+	functionalChildren := make([]asset.FunctionalNode, 0, len(r.Sensors))
+	for i := range r.Sensors {
+		functionalChildren = append(functionalChildren, &r.Sensors[i])
 	}
 	return functionalChildren
-}
-
-//
-
-func apiFilterToCommonFilter(input [][]confmodel.FilterRule) [][]common.FilterRule {
-	result := make([][]common.FilterRule, len(input))
-	for i := 0; i < len(input); i++ {
-		result[i] = make([]common.FilterRule, len(input[i]))
-		for j := 0; j < len(input[i]); j++ {
-			result[i][j] = common.FilterRule{
-				Parameter: input[i][j].Parameter,
-				Regex:     input[i][j].Regex,
-			}
-		}
-	}
-	return result
 }

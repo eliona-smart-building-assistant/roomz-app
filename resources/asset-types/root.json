@@ -1,0 +1,12 @@
+{
+	"attributes": [],
+	"custom": true,
+	"icon": null,
+	"name": "roomz_root",
+	"translation": {
+		"de": "ROOMZ-Root",
+		"en": "ROOMZ Root"
+	},
+	"urldoc": "https://roomz.io",
+	"vendor": "ROOMZ"
+}

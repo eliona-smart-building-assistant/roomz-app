@@ -1,0 +1,35 @@
+{
+	"attributes": [
+		{
+			"enable": true,
+			"name": "presence",
+			"subtype": "input",
+			"type": "inputs-and-switches",
+			"translation": {
+				"de": "Präsenz",
+				"en": "Presence"
+			},
+			"unit": null,
+			"map": [
+				{
+					"value": 0,
+					"text": "Empty"
+				},
+				{
+					"value": 1,
+					"text": "Occupied"
+				}
+			],
+			"isDigital": true
+		}
+	],
+	"custom": true,
+	"icon": null,
+	"name": "roomz_presence_sensor",
+	"translation": {
+		"de": "ROOMZ-Anwesenheitssensor",
+		"en": "ROOMZ Presence Sensor"
+	},
+	"urldoc": "https://roomz.io",
+	"vendor": "ROOMZ"
+}
