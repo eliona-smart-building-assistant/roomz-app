@@ -6,8 +6,8 @@
     "de": "ROOMZ"
   },
   "description": {
-    "en": "The ROOMZ app is used to access ROOMZ.",
-    "de": "Die ROOMZ App ermöglicht den Zugriff auf ROOMZ."
+    "en": "The ROOMZ app allows gathering data from ROOMZ sensors.",
+    "de": "Die ROOMZ-App ermöglicht das Sammeln von Daten von ROOMZ-Sensoren."
   },
   "dashboardTemplateNames": [
     "ROOMZ"
