@@ -2,11 +2,11 @@
 
 ### Introduction
 
-> The ROOMZ app provides integration and synchronization between Eliona and ROOMZ services.
+> The ROOMZ app provides Eliona with data from ROOMZ sensors.
 
 ## Overview
 
-This guide provides instructions on configuring, installing, and using the ROOMZ app to manage resources and synchronize data between Eliona and ROOMZ services.
+This guide provides instructions on configuring, installing, and using the ROOMZ app to gather data from ROOMZ sensors.
 
 ## Installation
 
@@ -14,13 +14,11 @@ Install the ROOMZ app via the Eliona App Store.
 
 ## Configuration
 
-The ROOMZ app requires configuration through Eliona’s settings interface. Below are the general steps and details needed to configure the app effectively.
+The ROOMZ app requires configuration through Eliona’s settings interface.
 
-### Registering the app in ROOMZ Service
+### Registering the app in ROOMZ Portal
 
-Create credentials in ROOMZ Service to connect the ROOMZ services from Eliona. All required credentials are listed below in the [configuration section](#configure-the-roomz-app).  
-
-<mark>TODO: Describe the steps where you can get or create the necessary credentials.</mark> 
+This app uses an experimental [Webhook API](https://github.com/roomz-io/openapi), which is not yet generally available, therefore ROOMZ support must be contacted to activate sending data. The webhook endpoint is located at `https://{your-eliona-instance}/apps-public/roomz/webhook`.
 
 ### Configure the ROOMZ app 
 
@@ -28,9 +26,6 @@ Configurations can be created in Eliona under `Apps > ROOMZ > Settings` which op
 
 | Attribute         | Description                                                                     |
 |-------------------|---------------------------------------------------------------------------------|
-| `baseURL`         | URL of the ROOMZ services.                                                   |
-| `clientSecrets`   | Client secrets obtained from the ROOMZ service.                              |
-| `assetFilter`     | Filtering asset during [Continuous Asset Creation](#continuous-asset-creation). |
 | `enable`          | Flag to enable or disable this configuration.                                   |
 | `refreshInterval` | Interval in seconds for data synchronization.                                   |
 | `requestTimeout`  | API query timeout in seconds.                                                   |
@@ -40,9 +35,6 @@ Example configuration JSON:
 
 ```json
 {
-  "baseURL": "http://service/v1",
-  "clientSecrets": "random-cl13nt-s3cr3t",
-  "filter": "",
   "enable": true,
   "refreshInterval": 60,
   "requestTimeout": 120,
@@ -54,16 +46,10 @@ Example configuration JSON:
 
 ## Continuous Asset Creation
 
-Once configured, the app starts Continuous Asset Creation (CAC). Discovered resources are automatically created as assets in Eliona, and users are notified via Eliona’s notification system.
+Once configured, the app listens for data updates from ROOMZ. With every presence status change (someone walks into or out of the space), the app receives a message from ROOMZ and writes the data to Eliona.
 
-<mark>TODO: Describe what resources are created, the hierarchy and the data points.</mark>
+If the app has received a data from the sensor for the first time, then the app creates a new asset located under "ROOMZ root" asset. The asset is named by the space ID (that is the only information that ROOMZ API provides), but can be renamed and moved by the user.
 
-## Additional Features
+This means that the app creates all assets automatically for all the spaces that are used.
 
-<mark>TODO: Describe all other features of the app.</mark>
-
-### Dashboard templates
-
-The app offers a predefined dashboard that clearly displays the most important information. YOu can create such a dashboard under `Dashboards > Copy Dashboard > From App > ROOMZ`.
-
-### <mark>TODO: Other features</mark>
+The user who created or last updated the app's configuration will get notified of newly created assets.
