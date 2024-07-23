@@ -1,11 +1,10 @@
 # Eliona App for ROOMZ
 
-The ROOMZ app is used to access ROOMZ.
+The ROOMZ app is used to gather data from ROOMZ sensors. It provides a webhook endpoint implementing the experimental [ROOMZ webhook API description](https://github.com/roomz-io/openapi).
 
 ## Configuration
 
 The app needs environment variables and database tables for configuration. To edit the database tables the app provides an own API access.
-
 
 ### Registration in Eliona ###
 
@@ -24,13 +23,11 @@ This initialization can be handled by the `reset.sql` script.
 
 - `API_TOKEN`: defines the secret to authenticate the app and access the Eliona API.
 
-- `API_SERVER_PORT`(optional): define the port the API server listens. The default value is Port `3000`. <mark>Todo: Decide if the app needs its own API. If so, an API server have to implemented and the port have to be configurable.</mark>
+- `API_SERVER_PORT`(optional): define the port the API server listens. The default value is Port `3000`.
 
 - `LOG_LEVEL`(optional): defines the minimum level that should be [logged](https://github.com/eliona-smart-building-assistant/go-utils/blob/main/log/README.md). The default level is `info`.
 
 ### Database tables ###
-
-<mark>Todo: Describe other tables if the app needs them.</mark>
 
 The app requires configuration data that remains in the database. To do this, the app creates its own database schema `roomz` during initialization. To modify and handle the configuration data the app provides an API access. Have a look at the [API specification](https://eliona-smart-building-assistant.github.io/open-api-docs/?https://raw.githubusercontent.com/eliona-smart-building-assistant/roomz-app/develop/openapi.yaml) how the configuration tables should be used.
 
@@ -56,26 +53,15 @@ The app provides its own API to access configuration data and other functions. T
 
 This app creates Eliona asset types and attribute sets during initialization.
 
-The data is written for each device, structured into different subtypes of Elinoa assets. The following subtypes are defined:
+The data is written for each device, structured into different subtypes of Eliona assets. The following subtypes are defined:
 
-- `Info`: Static data which provides information about a device like address and firmware info.
-- `Status`: Device status information, like battery level.
 - `Input`: Current values reported by sensors.
-- `Output`: Values that are to be passed back to the provider.
 
 ### Continuous asset creation ###
 
-Assets for all devices connected to the Template account are created automatically when the configuration is added.
-
-To select which assets to create, a filter could be specified in config. The schema of the filter is defined in the `openapi.yaml` file.
-
-Possible filter parameters are defined in the structs in `broker.go` and marked with `eliona:"attribute_name,filterable"` field tag.
+Assets are automatically created when data for new sensor is received. Unfortunately, there is currently no way to discover all of the devices automatically (ROOMZ does not provide that).
 
 To avoid conflicts, the Global Asset Identifier is a manufacturer's ID prefixed with asset type name as a namespace.
-
-### Dashboard ###
-
-An example dashboard meant for a quick start or showcasing the apps abilities can be obtained by accessing the dashboard endpoint defined in the `openapi.yaml` file.
 
 ## Tools
 
@@ -99,4 +85,4 @@ For the database access [SQLBoiler](https://github.com/volatiletech/sqlboiler) i
 
 ### Generate asset type descriptions ###
 
-For generating asset type descriptions from field-tag-annotated structs, [asse-from-struct tool](https://github.com/eliona-smart-building-assistant/dev-utilities) can be used.
+For generating asset type descriptions from field-tag-annotated structs, [asset-from-struct tool](https://github.com/eliona-smart-building-assistant/dev-utilities) can be used.
