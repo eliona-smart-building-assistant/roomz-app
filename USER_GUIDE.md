@@ -27,8 +27,6 @@ Configure the app in Eliona by navigating to `Apps > ROOMZ > Settings`, which op
 | Attribute         | Description                                                     |
 |-------------------|-----------------------------------------------------------------|
 | `enable`          | Flag to enable or disable this configuration.                   |
-| `refreshInterval` | Interval in seconds for data synchronization.                   |
-| `requestTimeout`  | API query timeout in seconds.                                   |
 | `projectIDs`      | List of Eliona project IDs for data collection.                 |
 
 Example configuration JSON:
@@ -36,8 +34,6 @@ Example configuration JSON:
 ```json
 {
   "enable": true,
-  "refreshInterval": 60,
-  "requestTimeout": 120,
   "projectIDs": [
     "10"
   ]
