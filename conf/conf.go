@@ -94,6 +94,7 @@ func DeleteConfig(ctx context.Context, configID int64) error {
 
 func toDbConfig(ctx context.Context, appConfig confmodel.Configuration) (dbConfig appdb.Configuration, err error) {
 	dbConfig.ID = appConfig.Id
+	dbConfig.Secret = appConfig.Secret
 	dbConfig.Active = appConfig.Active
 	dbConfig.Enable = appConfig.Enable
 	dbConfig.ProjectIds = appConfig.ProjectIDs
@@ -108,6 +109,7 @@ func toDbConfig(ctx context.Context, appConfig confmodel.Configuration) (dbConfi
 
 func toAppConfig(dbConfig *appdb.Configuration) (appConfig confmodel.Configuration, err error) {
 	appConfig.Id = dbConfig.ID
+	appConfig.Secret = dbConfig.Secret
 	appConfig.Enable = dbConfig.Enable
 	appConfig.Active = dbConfig.Active
 	appConfig.ProjectIDs = dbConfig.ProjectIds

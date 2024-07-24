@@ -14,11 +14,13 @@ Install the ROOMZ app from the Eliona App Store.
 
 ## Configuration
 
-Configure the ROOMZ app through the Eliona settings interface.
+Register the app in ROOMZ, then configure the ROOMZ app through the Eliona settings interface.
 
 ### Registering the App in ROOMZ Portal
 
-The ROOMZ app uses an experimental [Webhook API](https://github.com/roomz-io/openapi), which is not generally available yet. Contact ROOMZ support to activate data sending. The webhook endpoint for your Eliona instance is: `https://{your-eliona-instance}/apps-public/roomz/webhook`.
+The ROOMZ app uses an experimental [Webhook API](https://github.com/roomz-io/openapi), which is not generally available yet. Contact ROOMZ support to activate data sending and get webhook secret. The webhook endpoint for your Eliona instance is: `https://{your-eliona-instance}/apps-public/roomz/webhook`.
+
+> As the Webhook enpoint has to be exposed to the Internet, all incoming data are verified using ROOMZ signature. To verify this, ROOMZ has to provide a Webhook secret, a public key to verify the signature.
 
 ### Configuring the ROOMZ App
 
@@ -26,6 +28,7 @@ Configure the app in Eliona by navigating to `Apps > ROOMZ > Settings`, which op
 
 | Attribute         | Description                                                     |
 |-------------------|-----------------------------------------------------------------|
+| `secret`          | Webhook secret provided by ROOMZ.                               |
 | `enable`          | Flag to enable or disable this configuration.                   |
 | `projectIDs`      | List of Eliona project IDs for data collection.                 |
 
@@ -33,6 +36,7 @@ Example configuration JSON:
 
 ```json
 {
+  "secret": "some-webhook-secret",
   "enable": true,
   "projectIDs": [
     "10"

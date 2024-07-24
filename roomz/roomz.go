@@ -16,10 +16,14 @@
 package roomz
 
 import (
+	"crypto/hmac"
+	"crypto/sha512"
+	"encoding/base64"
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
+
+	"github.com/eliona-smart-building-assistant/go-utils/log"
 )
 
 type webhookEvent struct {
@@ -46,11 +50,13 @@ type webhookHandlerFunc func(workspaceId string, presenceStatus PresenceStatus) 
 
 type webhookServer struct {
 	handlers map[string]webhookHandlerFunc
+	secret   string
 }
 
-func newWebhookServer() *webhookServer {
+func newWebhookServer(secret string) *webhookServer {
 	return &webhookServer{
 		handlers: make(map[string]webhookHandlerFunc),
+		secret:   secret,
 	}
 }
 
@@ -65,14 +71,19 @@ func (s *webhookServer) serveHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// todo: Validate signature?
-
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Failed to read request body", http.StatusInternalServerError)
 		return
 	}
 	defer r.Body.Close()
+
+	if !s.checkSignature(body, signature) {
+		log.Warn("webhook", "invalid signature: %v", signature)
+		http.Error(w, "Invalid signature", http.StatusUnauthorized)
+		return
+	}
+	log.Debug("webhook", "signature verified successfully") // todo: remove
 
 	var event webhookEvent
 	if err := json.Unmarshal(body, &event); err != nil {
@@ -94,14 +105,25 @@ func (s *webhookServer) serveHTTP(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func (s *webhookServer) checkSignature(payload []byte, receivedSignature string) bool {
+	generatedSignature := s.generateSignature(payload)
+	return hmac.Equal([]byte(generatedSignature), []byte(receivedSignature))
+}
+
+func (s *webhookServer) generateSignature(payload []byte) string {
+	h := hmac.New(sha512.New, []byte(s.secret))
+	h.Write(payload)
+	return base64.StdEncoding.EncodeToString(h.Sum(nil))
+}
+
 func handleWorkspacePresenceChanged(callback func(workspaceId string, presenceStatus PresenceStatus) error) webhookHandlerFunc {
 	return func(workspaceId string, status PresenceStatus) error {
 		return callback(workspaceId, status)
 	}
 }
 
-func StartWebhookListener(callback func(workspaceId string, presenceStatus PresenceStatus) error) {
-	server := newWebhookServer()
+func StartWebhookListener(secret string, callback func(workspaceId string, presenceStatus PresenceStatus) error) {
+	server := newWebhookServer(secret)
 	server.registerHandler("workspace.presence.changed", handleWorkspacePresenceChanged(callback))
 	http.HandleFunc("/webhook", server.serveHTTP)
 	if err := http.ListenAndServe(":8081", nil); err != nil {

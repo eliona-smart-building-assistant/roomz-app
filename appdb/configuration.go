@@ -25,6 +25,7 @@ import (
 // Configuration is an object representing the database table.
 type Configuration struct {
 	ID         int64             `boil:"id" json:"id" toml:"id" yaml:"id"`
+	Secret     string            `boil:"secret" json:"secret" toml:"secret" yaml:"secret"`
 	Active     bool              `boil:"active" json:"active" toml:"active" yaml:"active"`
 	Enable     bool              `boil:"enable" json:"enable" toml:"enable" yaml:"enable"`
 	ProjectIds types.StringArray `boil:"project_ids" json:"project_ids" toml:"project_ids" yaml:"project_ids"`
@@ -36,12 +37,14 @@ type Configuration struct {
 
 var ConfigurationColumns = struct {
 	ID         string
+	Secret     string
 	Active     string
 	Enable     string
 	ProjectIds string
 	UserID     string
 }{
 	ID:         "id",
+	Secret:     "secret",
 	Active:     "active",
 	Enable:     "enable",
 	ProjectIds: "project_ids",
@@ -50,12 +53,14 @@ var ConfigurationColumns = struct {
 
 var ConfigurationTableColumns = struct {
 	ID         string
+	Secret     string
 	Active     string
 	Enable     string
 	ProjectIds string
 	UserID     string
 }{
 	ID:         "configuration.id",
+	Secret:     "configuration.secret",
 	Active:     "configuration.active",
 	Enable:     "configuration.enable",
 	ProjectIds: "configuration.project_ids",
@@ -96,12 +101,14 @@ func (w whereHelpertypes_StringArray) GTE(x types.StringArray) qm.QueryMod {
 
 var ConfigurationWhere = struct {
 	ID         whereHelperint64
+	Secret     whereHelperstring
 	Active     whereHelperbool
 	Enable     whereHelperbool
 	ProjectIds whereHelpertypes_StringArray
 	UserID     whereHelperstring
 }{
 	ID:         whereHelperint64{field: "\"roomz\".\"configuration\".\"id\""},
+	Secret:     whereHelperstring{field: "\"roomz\".\"configuration\".\"secret\""},
 	Active:     whereHelperbool{field: "\"roomz\".\"configuration\".\"active\""},
 	Enable:     whereHelperbool{field: "\"roomz\".\"configuration\".\"enable\""},
 	ProjectIds: whereHelpertypes_StringArray{field: "\"roomz\".\"configuration\".\"project_ids\""},
@@ -136,8 +143,8 @@ func (r *configurationR) GetAssets() AssetSlice {
 type configurationL struct{}
 
 var (
-	configurationAllColumns            = []string{"id", "active", "enable", "project_ids", "user_id"}
-	configurationColumnsWithoutDefault = []string{"project_ids", "user_id"}
+	configurationAllColumns            = []string{"id", "secret", "active", "enable", "project_ids", "user_id"}
+	configurationColumnsWithoutDefault = []string{"secret", "project_ids", "user_id"}
 	configurationColumnsWithDefault    = []string{"id", "active", "enable"}
 	configurationPrimaryKeyColumns     = []string{"id"}
 	configurationGeneratedColumns      = []string{}

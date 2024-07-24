@@ -82,6 +82,7 @@ func (s *ConfigurationAPIService) DeleteConfigurationById(ctx context.Context, c
 func toAPIConfig(appConfig confmodel.Configuration) apiserver.Configuration {
 	return apiserver.Configuration{
 		Id:         &appConfig.Id,
+		Secret:     appConfig.Secret,
 		Enable:     &appConfig.Enable,
 		Active:     &appConfig.Active,
 		ProjectIDs: &appConfig.ProjectIDs,
@@ -89,24 +90,11 @@ func toAPIConfig(appConfig confmodel.Configuration) apiserver.Configuration {
 	}
 }
 
-func toAPIAssetFilter(appAF [][]confmodel.FilterRule) (result [][]apiserver.FilterRule) {
-	for _, outer := range appAF {
-		var innerResult []apiserver.FilterRule
-		for _, fr := range outer {
-			innerResult = append(innerResult, apiserver.FilterRule{
-				Parameter: fr.Parameter,
-				Regex:     fr.Regex,
-			})
-		}
-		result = append(result, innerResult)
-	}
-	return result
-}
-
 func toAppConfig(apiConfig apiserver.Configuration) (appConfig confmodel.Configuration) {
 	if apiConfig.Id != nil {
 		appConfig.Id = *apiConfig.Id
 	}
+	appConfig.Secret = apiConfig.Secret
 	if apiConfig.Active != nil {
 		appConfig.Active = *apiConfig.Active
 	}
@@ -117,18 +105,4 @@ func toAppConfig(apiConfig apiserver.Configuration) (appConfig confmodel.Configu
 		appConfig.ProjectIDs = *apiConfig.ProjectIDs
 	}
 	return appConfig
-}
-
-func toAppAssetFilter(apiAF [][]apiserver.FilterRule) (result [][]confmodel.FilterRule) {
-	for _, outer := range apiAF {
-		var innerResult []confmodel.FilterRule
-		for _, fr := range outer {
-			innerResult = append(innerResult, confmodel.FilterRule{
-				Parameter: fr.Parameter,
-				Regex:     fr.Regex,
-			})
-		}
-		result = append(result, innerResult)
-	}
-	return result
 }

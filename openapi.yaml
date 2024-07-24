@@ -205,6 +205,10 @@ components:
           description: Internal identifier for the configured API (created automatically).
           readOnly: true
           nullable: true
+        secret:
+          type: string
+          description: Webhook secret provided by ROOMZ
+          nullable: false
         enable:
           type: boolean
           description: Flag to enable or disable fetching from this API

@@ -15,6 +15,9 @@ type Configuration struct {
 	// Internal identifier for the configured API (created automatically).
 	Id *int64 `json:"id,omitempty"`
 
+	// Webhook secret provided by ROOMZ
+	Secret string `json:"secret,omitempty"`
+
 	// Flag to enable or disable fetching from this API
 	Enable *bool `json:"enable,omitempty"`
 

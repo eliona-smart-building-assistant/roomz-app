@@ -17,15 +17,11 @@ package confmodel
 
 type Configuration struct {
 	Id         int64
+	Secret     string
 	Enable     bool
 	Active     bool
 	ProjectIDs []string
 	UserId     string
-}
-
-type FilterRule struct {
-	Parameter string
-	Regex     string
 }
 
 type Asset struct {

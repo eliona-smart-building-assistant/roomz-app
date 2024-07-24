@@ -1,3 +1,4 @@
+
 --  This file is part of the Eliona project.
 --  Copyright © 2024 IoTEC AG. All Rights Reserved.
 --  ______ _ _
@@ -19,6 +20,7 @@ create schema if not exists roomz;
 create table if not exists roomz.configuration
 (
 	id                   bigserial primary key CHECK (id = 1), -- Only one configuration is possible
+	secret               text not null,
 	active               boolean not null default false,
 	enable               boolean not null default false,
 	project_ids          text[] not null,

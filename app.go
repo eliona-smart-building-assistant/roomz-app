@@ -114,7 +114,7 @@ func startWebhookListener(config confmodel.Configuration) {
 		return nil
 	}
 
-	roomz.StartWebhookListener(handlePresenceChange)
+	roomz.StartWebhookListener(config.Secret, handlePresenceChange)
 }
 
 // listenApi starts the API server and listen for requests
