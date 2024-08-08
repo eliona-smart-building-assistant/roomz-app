@@ -20,7 +20,6 @@ import (
 	"crypto/sha512"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 
@@ -28,18 +27,18 @@ import (
 )
 
 type webhookEvent struct {
-	ID         string                 `json:"id"`
-	Type       string                 `json:"type"`
-	Timestamp  string                 `json:"timestamp"`
-	ApiVersion string                 `json:"apiVersion"`
-	Data       map[string]interface{} `json:"data"`
+	ID         string                        `json:"id"`
+	Type       string                        `json:"type"`
+	Timestamp  string                        `json:"timestamp"`
+	ApiVersion string                        `json:"apiVersion"`
+	Data       workspacePresenceChangedEvent `json:"data"`
 }
 
 type PresenceStatus string
 
 const (
-	Free PresenceStatus = "free"
-	Busy PresenceStatus = "busy"
+	Free PresenceStatus = "Free"
+	Busy PresenceStatus = "Busy"
 )
 
 type workspacePresenceChangedEvent struct {
@@ -82,7 +81,6 @@ func (s *webhookServer) serveHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
-	fmt.Println(body)
 
 	if !s.checkSignature(body, signature) {
 		log.Warn("webhook", "Invalid signature: %v", signature)
@@ -105,7 +103,7 @@ func (s *webhookServer) serveHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := handler(event.Data["workspaceId"].(string), PresenceStatus(event.Data["presenceStatus"].(string))); err != nil {
+	if err := handler(event.Data.WorkspaceId, event.Data.PresenceStatus); err != nil {
 		log.Warn("webhook", "Failed to handle event: %v", err)
 		http.Error(w, "Failed to handle event", http.StatusInternalServerError)
 		return

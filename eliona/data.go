@@ -13,7 +13,7 @@ const ClientReference string = "roomz"
 
 func UpsertAssetData(config confmodel.Configuration, a assetmodel.Sensor) error {
 	for _, projectId := range config.ProjectIDs {
-		log.Debug("Eliona", "upserting data for asset: config %d and asset '%v'", config.Id, a.GetGAI())
+		log.Debug("Eliona", "upserting data %+v for asset: config %d and asset '%v'", a, config.Id, a.GetGAI())
 		assetId, err := a.GetAssetID(projectId)
 		if err != nil {
 			return err

@@ -92,8 +92,13 @@ func collectData() {
 func startWebhookListener(config confmodel.Configuration) {
 	handlePresenceChange := func(workspaceId string, presenceStatus roomz.PresenceStatus) error {
 		var presence int8
-		if presenceStatus == roomz.Busy {
+		switch presenceStatus {
+		case roomz.Free:
+			presence = 0
+		case roomz.Busy:
 			presence = 1
+		default:
+			log.Warn("roomz", "received unsupported state: %v", presenceStatus)
 		}
 		sensor := assetmodel.Sensor{
 			ID:       workspaceId,
