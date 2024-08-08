@@ -20,6 +20,7 @@ import (
 	"crypto/sha512"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 
@@ -81,6 +82,7 @@ func (s *webhookServer) serveHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
+	fmt.Println(body)
 
 	if !s.checkSignature(body, signature) {
 		log.Warn("webhook", "Invalid signature: %v", signature)
