@@ -67,14 +67,9 @@ func (s *webhookServer) registerHandler(eventType string, handler webhookHandler
 func (s *webhookServer) serveHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Debug("webhook", "Received request for URL: %s, Method: %s", r.URL.Path, r.Method)
 
-	signature := r.Header.Get("X-Roomz-Signature")
+	signature := r.Header.Get("Roomz-Signature")
 	if signature == "" {
-		log.Warn("webhook", "Missing X-Roomz-Signature header")
-		for name, values := range r.Header {
-			for _, value := range values {
-				log.Warn("webhook", "Header: %s = %s", name, value)
-			}
-		}
+		log.Warn("webhook", "Missing Roomz-Signature header")
 		http.Error(w, "Missing X-Roomz-Signature header", http.StatusBadRequest)
 		return
 	}
