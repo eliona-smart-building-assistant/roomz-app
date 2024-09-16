@@ -98,9 +98,11 @@ func startWebhookListener(config confmodel.Configuration) {
 		case roomz.Busy:
 			presence = 1
 		case roomz.None:
-			presence = -1
+			log.Debug("roomz", "'None' presence received for %s, probably space without sensor. Skipping.", workspaceId)
+			return nil
 		default:
-			log.Warn("roomz", "received unsupported state: %v", presenceStatus)
+			log.Warn("roomz", "received unsupported state: %s", presenceStatus)
+			return nil
 		}
 		sensor := assetmodel.Sensor{
 			ID:       workspaceId,
