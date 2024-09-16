@@ -39,6 +39,7 @@ type PresenceStatus string
 const (
 	Free PresenceStatus = "Free"
 	Busy PresenceStatus = "Busy"
+	None PresenceStatus = "None"
 )
 
 type workspacePresenceChangedEvent struct {

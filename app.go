@@ -97,6 +97,8 @@ func startWebhookListener(config confmodel.Configuration) {
 			presence = 0
 		case roomz.Busy:
 			presence = 1
+		case roomz.None:
+			presence = -1
 		default:
 			log.Warn("roomz", "received unsupported state: %v", presenceStatus)
 		}

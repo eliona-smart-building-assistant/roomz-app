@@ -18,6 +18,10 @@
 				{
 					"value": 1,
 					"text": "Occupied"
+				},
+				{
+					"value": -1,
+					"text": "No data"
 				}
 			],
 			"isDigital": true
