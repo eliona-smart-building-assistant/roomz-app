@@ -50,6 +50,11 @@ func initialization() {
 		asset.InitAssetTypeFiles("resources/asset-types/*.json"),
 		dashboard.InitWidgetTypeFiles("resources/widget-types/*.json"),
 	)
+
+	// Fixed asset type definition syntax in v1.0.7
+	app.Patch(conn, app.AppName(), "010007",
+		asset.InitAssetTypeFiles("resources/asset-types/*.json"),
+	)
 }
 
 var once sync.Once

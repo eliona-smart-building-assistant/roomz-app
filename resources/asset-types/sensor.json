@@ -13,11 +13,11 @@
 			"map": [
 				{
 					"value": 0,
-					"text": "Empty"
+					"map": "Empty"
 				},
 				{
 					"value": 1,
-					"text": "Occupied"
+					"map": "Occupied"
 				}
 			],
 			"isDigital": true
