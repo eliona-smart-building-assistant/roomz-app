@@ -71,7 +71,7 @@ func (s *webhookServer) serveHTTP(w http.ResponseWriter, r *http.Request) {
 	signature := r.Header.Get("Roomz-Signature")
 	if signature == "" {
 		log.Warn("webhook", "Missing Roomz-Signature header")
-		http.Error(w, "Missing X-Roomz-Signature header", http.StatusBadRequest)
+		http.Error(w, "Missing Roomz-Signature header", http.StatusBadRequest)
 		return
 	}
 
