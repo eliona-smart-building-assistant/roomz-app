@@ -21,7 +21,7 @@ info:
   description: API to access and configure the ROOMZ app
 externalDocs:
   description: Find out more about the ROOMZ app
-  url: https://github.com/eliona-smart-building-assistant/roomz-app
+  url: https://doc.eliona.io/collection/v/eliona-english/eliona-apps/apps/roomz
 servers:
   - url: "https://{server}/v1"
     variables:
